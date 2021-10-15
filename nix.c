@@ -31,27 +31,25 @@ yed_plugin_boot(yed_plugin* self)
         "nixpkgs",
         "inherit",
         "nix",
-
+        "rec",
+        "meta",
+        "system",
     };
     char* special_kwds[] = {
-        "builtins",
         "import",
         "imports",
-        "pkgs",
         "filter",
-        "config",
-        "home",
-        "packages",
-        "package",
-        "system",
-        "enable",
-        "environment",
-        "packageOverrides",
         "extraPkgs",
-        "services",
-        "hardware",
-        "extraPackages",
-        "users",
+        "mkShell",
+        "shellHook",
+        "buildInputs",
+        "configurePhase",
+        "buildPhase",
+        "installPhase",
+        "mkDerivation",
+        "stdenv",
+        "nativeBuildInputs",
+        "propagatedBuildInputs",
 
     };
     char* control_flow[] = {
@@ -93,17 +91,18 @@ yed_plugin_boot(yed_plugin* self)
     ARRAY_LOOP(typenames)
     highlight_add_kwd(&hinfo, *it, HL_TYPE);
     highlight_suffixed_words(&hinfo, '=', HL_PP);
+    highlight_suffixed_words(&hinfo, ':', HL_CALL);
+    highlight_prefixed_words(&hinfo, '.', HL_CALL);
+    highlight_suffixed_words(&hinfo, '.', HL_CALL);
     highlight_add_kwd(&hinfo, "true", HL_CON);
     highlight_add_kwd(&hinfo, "false", HL_CON);
     highlight_add_kwd(&hinfo, "stdin", HL_CON);
     highlight_add_kwd(&hinfo, "stdout", HL_CON);
     highlight_add_kwd(&hinfo, "stderr", HL_CON);
-    highlight_suffixed_words(&hinfo, ':', HL_CALL);
     highlight_numbers(&hinfo);
     highlight_within(&hinfo, "\"", "\"", '\\', -1, HL_STR);
     highlight_within(&hinfo, "'", "'", '\\', 1, HL_CHAR);
     highlight_within_multiline(&hinfo, "/*", "*/", 0, HL_COMMENT);
-    highlight_within_multiline(&hinfo, "[", "]", 0, HL_TYPE);
     highlight_to_eol_from(&hinfo, "#", HL_COMMENT);
 
     ys->redraw = 1;
